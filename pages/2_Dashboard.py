@@ -16,7 +16,8 @@ st.set_page_config(
     layout="wide"
 )
 
-@st.cache_data
+# @st.cache_data evita chamar a API toda vez que a página recarregar
+@st.cache_data(show_spinner=False)
 def carregar_dados_analiticos(lista_pokemon):
     """
     Busca os dados detalhados da API para análise.

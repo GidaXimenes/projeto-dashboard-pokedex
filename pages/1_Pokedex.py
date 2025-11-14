@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 # @st.cache_data evita chamar a API toda vez que a página recarregar
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def carregar_dados_pokemon(lista_pokemon):
     """
     Busca os dados detalhados de cada Pokémon na PokeAPI.
@@ -74,7 +74,11 @@ except FileNotFoundError:
 # Chama a função principal de carregamento
 df_pokemon = carregar_dados_pokemon(lista_pokemon_total)
 
-st.title(str(icon) + "Meu Dashboard Pokédex Interativo")
+col_logo, col_titulo = st.columns([1, 6]) 
+with col_logo:
+    st.image(icon, width=70)
+with col_titulo:
+    st.title("Pokédex Interativo")
 st.markdown("Use a barra lateral para selecionar um Pokémon e ver seus detalhes.")
 
 # --- Sidebar ---
@@ -101,6 +105,10 @@ with col2:
     # Formata os tipos para exibição
     tipos_str = ", ".join([t.capitalize() for t in dados_pkm['tipos']])
     st.write(f"**Tipo(s):** {tipos_str}")
+    st.write(f"**Altura:** {dados_pkm['altura']} m")
+    st.write(f"**Peso:** {dados_pkm['peso']} kg")
+    habilidades_str = ", ".join(dados_pkm['habilidades'])
+    st.write(f"**Habilidades:** {habilidades_str}")
     
     st.subheader("Stats Base")
     
