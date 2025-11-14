@@ -64,7 +64,7 @@ def carregar_dados_analiticos(lista_pokemon):
     barra_progresso.empty() # Limpa a barra
     return pd.DataFrame(dados_detalhados)
 
-# Carrega os JSONs locais
+# Carrega os JSONs
 try:
     with open('data/pokemon_data.json', 'r') as f:
         lista_pokemon_total = json.load(f) 
@@ -74,7 +74,6 @@ except FileNotFoundError as e:
     st.error(f"Erro: Arquivo JSON não encontrado. {e}")
     st.stop()
 
-# Carrega dados (usa cache)
 df_pokemon = carregar_dados_analiticos(lista_pokemon_total)
 
 
@@ -122,10 +121,8 @@ idx_baixo = df_pokemon['altura'].idxmin()
 nome_baixo = df_pokemon.loc[idx_baixo, 'nome']
 valor_baixo = df_pokemon.loc[idx_baixo, 'altura']
     
-# Cria uma nova linha com 4 colunas
 col4, col5, col6, col7 = st.columns(4)
     
-# Exibe as novas métricas
 col4.metric(label="Pokémon Mais Pesado", value=nome_pesado, delta=f"{valor_pesado} kg")
 col5.metric(label="Pokémon Mais Leve", value=nome_leve, delta=f"{valor_leve} kg")
 col6.metric(label="Maior Pokémon", value=nome_alto, delta=f"{valor_alto} m")

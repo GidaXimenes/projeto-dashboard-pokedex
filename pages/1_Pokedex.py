@@ -32,7 +32,6 @@ def carregar_dados_pokemon(lista_pokemon):
     for i, pkm_info in enumerate(lista_amostra):
         url = pkm_info['url']
         try:
-            # Busca detalhes do Pokémon
             response = requests.get(url)
             if response.status_code == 200:
                 detalhes = response.json()
@@ -41,7 +40,6 @@ def carregar_dados_pokemon(lista_pokemon):
                 tipos = [t['type']['name'] for t in detalhes['types']]
                 habilidades = [a['ability']['name'].capitalize() for a in detalhes['abilities']]
                 
-                # Junta tudo
                 dados_detalhados.append({
                     "nome": detalhes['name'].capitalize(),
                     "id": detalhes['id'],
@@ -63,7 +61,7 @@ def carregar_dados_pokemon(lista_pokemon):
     barra_progresso.empty() # Limpa a barra
     return pd.DataFrame(dados_detalhados)
 
-# Carrega o JSON local
+# Carrega o JSON
 try:
     with open('data/pokemon_data.json', 'r') as f:
         lista_pokemon_total = json.load(f) 
@@ -71,30 +69,27 @@ except FileNotFoundError:
     st.error("Arquivo 'data/pokemon_data.json' não encontrado.")
     st.stop()
 
-# Chama a função principal de carregamento
 df_pokemon = carregar_dados_pokemon(lista_pokemon_total)
 
-col_logo, col_titulo = st.columns([1, 6]) 
+col_logo, col_titulo = st.columns([1, 15]) 
 with col_logo:
-    st.image(icon, width=70)
+    st.image("icon/pokedex.png", width=70) 
 with col_titulo:
-    st.title("Pokédex Interativo")
+    st.title("Pokédex")
 st.markdown("Use a barra lateral para selecionar um Pokémon e ver seus detalhes.")
 
-# --- Sidebar ---
+# Sidebar 
 st.sidebar.header("Filtros")
 pokemon_selecionado = st.sidebar.selectbox(
     "Escolha um Pokémon:",
     df_pokemon['nome'] 
 )
 
-# --- Página Principal ---
-st.header(f"Detalhes de: {pokemon_selecionado}")
-
 # Filtra o Pokémon selecionado
 dados_pkm = df_pokemon[df_pokemon['nome'] == pokemon_selecionado].iloc[0]
 
-# Layout: Imagem | Stats
+st.header(f"{dados_pkm['id']}. {pokemon_selecionado}")
+
 col1, col2 = st.columns([1, 2]) 
 
 with col1:
